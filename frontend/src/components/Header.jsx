@@ -40,25 +40,30 @@ const Header = () => {
       if (userInfo.isAdmin) {
         navigate('/admin-dashboard');
       } 
+      // If user is a trainer, navigate to the trainer dashboard
+      else if (userInfo.userType === 'Trainer') {
+        navigate('/trainer-dashboard');
+      } 
       // If user is a member, navigate to the member dashboard
-      else {
+      else if (userInfo.userType === 'Member') {
         navigate('/member-dashboard');
       }
     } else {
       // If not logged in, navigate to the home page
       navigate('/');
     }
-  };
+};
+
 
   return (
-    <header className="bg-gray-800">
+    <header className="bg-yellow-500">
       <nav className="container mx-auto flex items-center justify-between py-4 px-6">
         {/* Replaced Link with onClick for dynamic navigation */}
         <button
           onClick={handleNavigation}
           className="text-white text-xl font-semibold focus:outline-none"
         >
-          MERN Auth
+          Aura Fitness
         </button>
         <div className="flex items-center space-x-4">
           {userInfo ? (

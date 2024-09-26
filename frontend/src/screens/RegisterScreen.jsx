@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRegisterMutation } from "../../src/slices/usersApiSlice";
 import { setCredentials } from "../../src/slices/authSlice";
 import { toast } from "react-toastify";
+import back from '../../src/assets/back.png';
 
 function SignUpPage() {
   const [name, setName] = useState("");
@@ -15,12 +16,12 @@ function SignUpPage() {
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
   const [birthday, setBirthday] = useState("");
+  const [age, setAge] = useState(null); // State to store calculated age
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [register, { isLoading }] = useRegisterMutation();
-
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -32,6 +33,25 @@ function SignUpPage() {
       }
     }
   }, [navigate, userInfo]);
+
+  // Function to calculate age
+  const calculateAge = (birthday) => {
+    const birthDate = new Date(birthday);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const handleBirthdayChange = (e) => {
+    const selectedBirthday = e.target.value;
+    setBirthday(selectedBirthday);
+    const calculatedAge = calculateAge(selectedBirthday);
+    setAge(calculatedAge); // Update age state
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -68,7 +88,7 @@ function SignUpPage() {
   };
 
   return (
-    <div className="flex items-center justify-center h-[1350px] mt-[-300px]">
+    <div className="flex items-center justify-center h-[1350px] mt-[-440px]">
       <div className="relative flex flex-col text-gray-700 bg-black bg-opacity-70 shadow-none rounded-xl bg-clip-border mt-[300px] p-8 mb-20">
         <h4 className="block font-sans text-5xl antialiased font-semibold leading-snug tracking-normal text-center text-white">
           SIGN UP
@@ -152,10 +172,13 @@ function SignUpPage() {
                 type="date"
                 placeholder="Enter birthday"
                 value={birthday}
-                onChange={(e) => setBirthday(e.target.value)}
+                onChange={handleBirthdayChange} // Updated to use new handler
                 className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
               />
             </div>
+            {age !== null && ( // Display age if calculated
+              <p className="text-white">Age: {age} years</p>
+            )}
 
             <div className="relative h-11 w-full min-w-[200px]">
               <input
@@ -180,8 +203,9 @@ function SignUpPage() {
         </form>
 
         <button
-          className="mt-10 block w-full rounded-lg bg-green-500 py-3 px-6 text-center font-sans text-xs font-bold uppercase text-white shadow-md hover:shadow-lg transition-all"
+          className="mt-10 block w-full rounded-lg bg-yellow-500 py-3 px-6 text-center font-sans text-xs font-bold uppercase text-white shadow-md hover:shadow-lg transition-all"
           type="submit"
+          onClick={submitHandler}
         >
           Register
         </button>

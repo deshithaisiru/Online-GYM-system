@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
-import { useUpdateUserMutation } from "../slices/usersApiSlice";
-import { setCredentials } from "../slices/authSlice";
+import { useUpdateUserMutation, useDeleteUserMutation } from "../slices/usersApiSlice";
+import { setCredentials, logout } from "../slices/authSlice";
 
 const ProfileScreen = () => {
   const [email, setEmail] = useState("");
@@ -15,10 +16,15 @@ const ProfileScreen = () => {
   const [birthday, setBirthday] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [bmi, setBmi] = useState(null);
+  const [bmiCategory, setBmiCategory] = useState("");
+  const [age, setAge] = useState(null); // New state for age
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { userInfo } = useSelector((state) => state.auth);
-  const [updateProfile, { isLoading }] = useUpdateUserMutation();
+  const [updateProfile, { isLoading: isUpdating }] = useUpdateUserMutation();
+  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
   useEffect(() => {
     setName(userInfo.name);
@@ -28,7 +34,44 @@ const ProfileScreen = () => {
     setHeight(userInfo.height);
     setWeight(userInfo.weight);
     setBirthday(userInfo.birthday);
+    if (userInfo.birthday) {
+      calculateAge(userInfo.birthday); // Calculate age on initial load
+    }
   }, [userInfo]);
+
+  const calculateBMI = () => {
+    if (height && weight) {
+      const heightInMeters = height / 100;
+      const bmiValue = (weight / (heightInMeters * heightInMeters)).toFixed(2);
+      setBmi(bmiValue);
+
+      let category = "";
+      if (bmiValue < 18.5) {
+        category = "Underweight";
+      } else if (bmiValue >= 18.5 && bmiValue <= 24.9) {
+        category = "Normal weight";
+      } else if (bmiValue >= 25 && bmiValue <= 29.9) {
+        category = "Overweight";
+      } else {
+        category = "Obesity";
+      }
+      setBmiCategory(category);
+    } else {
+      setBmi(null);
+      setBmiCategory("");
+    }
+  };
+
+  const calculateAge = (birthDate) => {
+    const today = new Date();
+    const birthDateObj = new Date(birthDate);
+    let age = today.getFullYear() - birthDateObj.getFullYear();
+    const monthDifference = today.getMonth() - birthDateObj.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDateObj.getDate())) {
+      age--;
+    }
+    setAge(age);
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -55,173 +98,179 @@ const ProfileScreen = () => {
     }
   };
 
+  const deleteAccountHandler = async () => {
+    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      try {
+        await deleteUser().unwrap();
+        dispatch(logout());
+        navigate('/');
+        toast.success("Your account has been deleted successfully");
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
+
   return (
-    <div className="max-w-md mx-auto bg-white p-8 mt-10 rounded-lg shadow-md">
-      <h1 className="text-3xl font-bold mb-6 text-center">Update Profile</h1>
+    <div className="flex items-center justify-center h-[1100px] mt-[-200px]">
+      <div className="relative flex flex-col text-gray-700 bg-black bg-opacity-70 shadow-none rounded-xl bg-clip-border mt-[300px] p-8 mb-20">
+        <h4 className="block font-sans text-5xl antialiased font-semibold leading-snug tracking-normal text-center text-white">
+          Update Profile
+        </h4>
+        <p className="block mt-1 font-sans text-xl antialiased font-normal leading-relaxed text-center text-white">
+          Update your profile information
+        </p>
 
-      <form onSubmit={submitHandler}>
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="name"
-          >
-            Name
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            type="text"
-            id="name"
-            placeholder="Enter name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
+        <form className="max-w-screen-lg mt-8 w-80 sm:w-[40rem] flex gap-10 pb-50" onSubmit={submitHandler}>
+          {/* Left Part */}
+          <div className="flex flex-col gap-6 w-full">
+            <div className="relative h-11 w-full min-w-[200px] mb-4">
+              <label className="block text-white text-sm mb-1">Name</label>
+              <input
+                type="text"
+                placeholder="Enter name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
+              />
+            </div>
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="email"
-          >
-            Email Address
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            type="email"
-            id="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+            <div className="relative h-11 w-full min-w-[200px] mb-4">
+              <label className="block text-white text-sm mb-1">Email</label>
+              <input
+                type="email"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
+              />
+            </div>
 
-        <div className="mb-4">
-  <label
-    className="block text-gray-700 text-sm font-bold mb-2"
-    htmlFor="userType"
-  >
-    User Type
-  </label>
-  <input
-    className="w-full px-3 py-2 border rounded-md bg-gray-100 focus:outline-none"
-    type="text"
-    id="userType"
-    placeholder="User type"
-    value={userInfo.isAdmin ? "Admin" : userType}
-    readOnly
-  />
-</div>
+            <div className="relative h-11 w-full min-w-[200px] mb-4">
+              <label className="block text-white text-sm mb-1">Mobile Number</label>
+              <input
+                placeholder="Mobile Number"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
+                className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
+              />
+            </div>
 
+            <div className="relative h-11 w-full min-w-[200px] mb-4">
+              <label className="block text-white text-sm mb-1">User Type</label>
+              <input
+                type="text"
+                placeholder="User Type"
+                value={userInfo.isAdmin ? "Admin" : userType}
+                readOnly
+                className="peer h-full w-full rounded-md bg-gray-100 border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all"
+              />
+            </div>
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="mobile"
-          >
-            Mobile
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            type="text"
-            id="mobile"
-            placeholder="Enter mobile number"
-            value={mobile}
-            onChange={(e) => setMobile(e.target.value)}
-          />
-        </div>
+            <div className="relative h-11 w-full min-w-[200px] mb-4">
+              <label className="block text-white text-sm mb-1">Password</label>
+              <input
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
+              />
+            </div>
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="height"
-          >
-            Height (cm)
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            type="number"
-            id="height"
-            placeholder="Enter height"
-            value={height}
-            onChange={(e) => setHeight(e.target.value)}
-          />
-        </div>
+            <div className="relative h-11 w-full min-w-[200px] mb-4">
+              <label className="block text-white text-sm mb-1">Confirm Password</label>
+              <input
+                type="password"
+                placeholder="Confirm password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
+              />
+            </div>
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="weight"
-          >
-            Weight (kg)
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            type="number"
-            id="weight"
-            placeholder="Enter weight"
-            value={weight}
-            onChange={(e) => setWeight(e.target.value)}
-          />
-        </div>
+            <button
+              type="button"
+              onClick={calculateBMI}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all"
+            >
+              Check BMI
+            </button>
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="birthday"
-          >
-            Birthday
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            type="date"
-            id="birthday"
-            value={birthday ? birthday.substring(0, 10) : ""}
-            onChange={(e) => setBirthday(e.target.value)}
-          />
-        </div>
+            {bmi && (
+              <div className="mt-4 text-white">
+                <p>BMI: {bmi}</p>
+                <p>Category: {bmiCategory}</p>
+              </div>
+            )}
+          </div>
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="password"
-          >
-            Password
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            type="password"
-            id="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+          {/* Right Part */}
+          <div className="flex flex-col gap-6 w-full">
+            <div className="relative h-11 w-full min-w-[200px] mb-4">
+              <label className="block text-white text-sm mb-1">Height (cm)</label>
+              <input
+                type="number"
+                placeholder="Enter height in cm"
+                value={height}
+                onChange={(e) => setHeight(e.target.value)}
+                className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
+              />
+            </div>
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="confirmPassword"
-          >
-            Confirm Password
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            type="password"
-            id="confirmPassword"
-            placeholder="Confirm password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </div>
+            <div className="relative h-11 w-full min-w-[200px] mb-4">
+              <label className="block text-white text-sm mb-1">Weight (kg)</label>
+              <input
+                type="number"
+                placeholder="Enter weight in kg"
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
+                className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
+              />
+            </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200"
-        >
-          Update
-        </button>
+            <div className="relative h-11 w-full min-w-[200px] mb-4">
+              <label className="block text-white text-sm mb-1">Birthday</label>
+              <input
+                type="date"
+                value={birthday ? birthday.split("T")[0] : ""}
+                onChange={(e) => {
+                  setBirthday(e.target.value);
+                  calculateAge(e.target.value);
+                }}
+                className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
+                min="1900-01-01"
+                max="2100-01-01"
+              />
+            </div>
 
-        {isLoading && <Loader />}
-      </form>
+            <div className="relative h-11 w-full min-w-[200px] mb-4">
+              <label className="block text-white text-sm mb-1">Age</label>
+              <input
+                type="text"
+                value={age !== null ? age : ""}
+                readOnly
+                className="peer h-full w-full rounded-md bg-gray-100 border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-all"
+            >
+              Update Profile
+            </button>
+
+            <button
+              type="button"
+              onClick={deleteAccountHandler}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-all"
+            >
+              Delete Profile
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
