@@ -48,6 +48,10 @@ const userSchema = mongoose.Schema(
       type: Date,
       required: false,
     },
+    address: {
+      type: String,
+      required: false, // Set to true if it's mandatory
+    },
   },
   {
     timestamps: true,

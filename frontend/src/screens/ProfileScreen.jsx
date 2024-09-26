@@ -19,6 +19,8 @@ const ProfileScreen = () => {
   const [bmi, setBmi] = useState(null);
   const [bmiCategory, setBmiCategory] = useState("");
   const [age, setAge] = useState(null); // New state for age
+  const [address, setAddress] = useState("");
+
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,6 +35,7 @@ const ProfileScreen = () => {
     setMobile(userInfo.mobile);
     setHeight(userInfo.height);
     setWeight(userInfo.weight);
+    setAddress(userInfo.address);
     setBirthday(userInfo.birthday);
     if (userInfo.birthday) {
       calculateAge(userInfo.birthday); // Calculate age on initial load
@@ -89,6 +92,7 @@ const ProfileScreen = () => {
           weight,
           birthday,
           password,
+          address,
         }).unwrap();
         dispatch(setCredentials(res));
         toast.success("Profile updated successfully");
@@ -241,6 +245,17 @@ const ProfileScreen = () => {
                 className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
                 min="1900-01-01"
                 max="2100-01-01"
+              />
+            </div>
+            
+            <div className="relative h-11 w-full min-w-[200px] mb-4">
+              <label className="block text-white text-sm mb-1">Address</label>
+              <input
+                type="text"
+                placeholder="Enter Address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
               />
             </div>
 

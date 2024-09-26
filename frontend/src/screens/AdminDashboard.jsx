@@ -9,7 +9,14 @@ import {
 } from "react-icons/md";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -20,6 +27,8 @@ const UserList = () => {
   const [filterBy, setFilterBy] = useState("name");
   const [filterTab, setFilterTab] = useState("all");
   const [bmiData, setBmiData] = useState([]);
+  const [showChart, setShowChart] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -118,20 +127,43 @@ const UserList = () => {
   const downloadPDF = () => {
     const doc = new jsPDF();
     doc.text("User List", 14, 15);
-    const tableColumn = ["Name", "Email", "User Type", "Mobile", "Is Admin"];
-    const tableRows = filteredUsers.map((user) => [
-      user.name,
-      user.email,
-      user.userType,
-      user.mobile,
-      user.isAdmin ? "Yes" : "No",
-    ]);
+
+    // Add a new column for BMI
+    const tableColumn = [
+      "Name",
+      "Email",
+      "Address",
+      "User Type",
+      "Mobile",
+      "BMI",
+      "Is Admin",
+    ];
+
+    // Assuming users have height and weight properties
+    const tableRows = filteredUsers.map((user) => {
+      // Calculate BMI if height and weight are available
+      const bmi =
+        user.height && user.weight
+          ? (user.weight / (user.height / 100) ** 2).toFixed(2)
+          : "N/A";
+
+      return [
+        user.name,
+        user.email,
+        user.address,
+        user.userType,
+        user.mobile,
+        bmi,
+        user.isAdmin ? "Yes" : "No",
+      ];
+    });
 
     doc.autoTable({
       head: [tableColumn],
       body: tableRows,
       startY: 20,
     });
+
     doc.save("user-list.pdf");
   };
 
@@ -143,6 +175,7 @@ const UserList = () => {
           <th className="py-2 px-4 border-b">Email</th>
           <th className="py-2 px-4 border-b">User Type</th>
           <th className="py-2 px-4 border-b">Mobile</th>
+          <th className="py-2 px-4 border-b">Address</th>
           <th className="py-2 px-4 border-b">Is Admin</th>
           <th className="py-2 px-4 border-b">Operations</th>
         </tr>
@@ -154,6 +187,7 @@ const UserList = () => {
             <td className="py-2 px-4 border-b">{user.email}</td>
             <td className="py-2 px-4 border-b">{user.userType}</td>
             <td className="py-2 px-4 border-b">{user.mobile}</td>
+            <td className="py-2 px-4 border-b">{user.address}</td>
             <td className="py-2 px-4 border-b">
               {user.isAdmin ? "Yes" : "No"}
             </td>
@@ -189,6 +223,7 @@ const UserList = () => {
       <p className="text-gray-600">{user.email}</p>
       <p className="text-gray-600">Type: {user.userType}</p>
       <p className="text-gray-600">Mobile: {user.mobile}</p>
+      <p className="text-gray-600">Address: {user.address}</p>
       <p className="text-gray-600">Admin: {user.isAdmin ? "Yes" : "No"}</p>
       <div className="flex gap-4 mt-4">
         <button
@@ -310,28 +345,64 @@ const UserList = () => {
             )}
           </div>
         )}
-        <h2 className="text-center text-white text-3xl font-bold mt-8 mb-4">
-              BMI Distribution Chart
-            </h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={bmiData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={100}
-                  label
-                >
-                  {bmiData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+        
+        <div>
+      <button
+        onClick={() => setShowChart(true)}
+        className="bg-yellow-500 hover:bg-black text-white font-bold py-2 px-4 rounded mt-7"
+      >
+        Show BMI Distribution Chart
+      </button>
+
+      {showChart && (
+        <>
+          <h2 className="text-center text-white text-4xl font-extrabold mt-12 mb-6">
+            BMI Distribution Chart
+          </h2>
+          <ResponsiveContainer width="100%" height={350}>
+            <PieChart>
+              <Pie
+                data={bmiData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={120}
+                innerRadius={60} // Added inner radius for a donut style
+                label
+                labelStyle={{ fontSize: "14px", fontWeight: "bold" }} // Style the labels
+              >
+                {bmiData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                    stroke="#fff" // Adding a stroke for clearer distinction between slices
+                    strokeWidth={2}
+                  />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#f5f5f5",
+                  borderRadius: "8px",
+                  border: "1px solid #ccc",
+                  padding: "10px",
+                }} // Custom tooltip style
+                itemStyle={{ color: "#333" }}
+              />
+              <Legend
+                iconSize={10}
+                layout="horizontal"
+                verticalAlign="bottom"
+                align="center"
+                wrapperStyle={{ paddingTop: "20px" }} // Add padding to separate legend
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        </>
+      )}
+    </div>
+        
       </div>
     </div>
   );

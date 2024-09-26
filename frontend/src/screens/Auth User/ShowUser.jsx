@@ -16,6 +16,7 @@ const ShowUser = () => {
     height: 0,
     weight: 0,
     birthday: '',
+    address: '',
     isAdmin: false,
   });
   const [loading, setLoading] = useState(false);
@@ -84,7 +85,7 @@ const ShowUser = () => {
     // Add title for the document
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(22);
-    doc.text("Client Details", 105, 50, null, null, "center");
+    doc.text(`Client Details - ${user.name}`, 105, 50, null, null, "center");
   
     // Line separator below title
     doc.setDrawColor(52, 152, 219);
@@ -101,6 +102,7 @@ const ShowUser = () => {
       ["Email", user.email],
       ["User Type", user.userType],
       ["Mobile", user.mobile],
+      ["Address", user.address],
       ["Height", `${user.height} cm`],
       ["Weight", `${user.weight} kg`],
       ["BMI", `${userBMI} (${bmiCategory})`],
@@ -196,6 +198,10 @@ const ShowUser = () => {
           <div className="w-full md:w-[calc(50%-12px)]">
             <p className="text-white font-bold">Mobile Number:</p>
             <p className="text-white">{user.mobile}</p>
+          </div>
+          <div className="w-full md:w-[calc(50%-12px)]">
+            <p className="text-white font-bold">Address:</p>
+            <p className="text-white">{user.address}</p>
           </div>
           <div className="w-full md:w-[calc(50%-12px)]">
             <p className="text-white font-bold">Height:</p>

@@ -95,6 +95,7 @@ const authUser = asyncHandler(async (req, res) => {
       height: user.height,
       weight: user.weight,
       birthday: user.birthday,
+      address: user.address,
     });
   } else {
     res.status(401);
@@ -106,7 +107,7 @@ const authUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, userType, mobile, height, weight, birthday } = req.body;
+  const { name, email, password, userType, mobile, height, weight, birthday, address } = req.body;
 
   const userExists = await User.findOne({ email });
 
@@ -124,6 +125,7 @@ const registerUser = asyncHandler(async (req, res) => {
     height,
     weight,
     birthday,
+    address,
   });
 
   if (user) {
@@ -142,6 +144,7 @@ const registerUser = asyncHandler(async (req, res) => {
       height: user.height,
       weight: user.weight,
       birthday: user.birthday,
+      address: user.address,
     });
   } else {
     res.status(400).json({ message: 'Invalid user data' });
@@ -176,6 +179,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
       height: user.height,
       weight: user.weight,
       birthday: user.birthday,
+      address: user.address,
       isAdmin: user.isAdmin,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
@@ -199,6 +203,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     user.height = req.body.height || user.height;
     user.weight = req.body.weight || user.weight;
     user.birthday = req.body.birthday || user.birthday;
+    user.address = req.body.address || user.address;
 
     if (req.body.password) {
       user.password = req.body.password;
@@ -216,6 +221,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       weight: updatedUser.weight,
       birthday: updatedUser.birthday,
       isAdmin: updatedUser.isAdmin,
+      address: updatedUser.address,
     });
   } else {
     res.status(404).json({ message: 'User not found' });
@@ -275,6 +281,7 @@ const adminGetProfile = asyncHandler(async (req, res) => {
       height: user.height,
       weight: user.weight,
       birthday: user.birthday,
+      address: user.address,
       isAdmin: user.isAdmin,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
@@ -298,6 +305,7 @@ const adminUpdateProfile = asyncHandler(async (req, res) => {
     user.height = req.body.height || user.height;
     user.weight = req.body.weight || user.weight;
     user.birthday = req.body.birthday || user.birthday;
+    user.address = req.body.address || user.address;
 
     // Update isAdmin if provided in the request body
     if (req.body.isAdmin !== undefined) {
@@ -320,6 +328,7 @@ const adminUpdateProfile = asyncHandler(async (req, res) => {
       height: updatedUser.height,
       weight: updatedUser.weight,
       birthday: updatedUser.birthday,
+      address: updatedUser.address,
       isAdmin: updatedUser.isAdmin, // Include isAdmin in the response
     });
   } else {
@@ -332,7 +341,7 @@ const adminUpdateProfile = asyncHandler(async (req, res) => {
 // @route   POST /api/admin/users
 // @access  Admin
 const adminCreateUser = asyncHandler(async (req, res) => {
-  const { name, email, password, userType, mobile, height, weight, birthday, isAdmin } = req.body;
+  const { name, email, password, userType, mobile, height, weight, birthday, isAdmin, address } = req.body;
 
   // Check if the user already exists
   const userExists = await User.findOne({ email });
@@ -353,6 +362,7 @@ const adminCreateUser = asyncHandler(async (req, res) => {
     weight,
     birthday,
     isAdmin, // Include the isAdmin field
+    address,
   });
 
   if (user) {
@@ -366,6 +376,7 @@ const adminCreateUser = asyncHandler(async (req, res) => {
       weight: user.weight,
       birthday: user.birthday,
       isAdmin: user.isAdmin, // Include isAdmin in the response
+      address: user.address,
     });
   } else {
     res.status(400);

@@ -17,6 +17,7 @@ const CreateUser = () => {
     height: '',
     weight: '',
     birthday: '',
+    address: '',
     isAdmin: false,
   });
   const [error, setError] = useState('');
@@ -71,10 +72,10 @@ const CreateUser = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="relative flex flex-col text-gray-700 bg-black bg-opacity-70 shadow-none rounded-xl bg-clip-border p-8 w-full max-w-screen-lg">
         <h4 className="block font-sans text-5xl antialiased font-semibold leading-snug tracking-normal text-center text-white mb-2">
-          Create New User
+          Create New Client
         </h4>
         <p className="block mt-1 font-sans text-xl antialiased font-normal leading-relaxed text-center text-white mb-8">
-          Add a new user to the Gym Management System
+          Add a new client to the Gym Management System
         </p>
 
         {error && (
@@ -130,6 +131,17 @@ const CreateUser = () => {
             />
           </div>
           <div className="w-full md:w-[calc(50%-12px)]">
+            <Input
+              type="text"
+              placeholder="Enter Adddress"
+              name="address"
+              value={user.address}
+              onChange={handleChange}
+              required
+              className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
+            />
+          </div>
+          <div className="w-full md:w-[calc(50%-12px)]">
             <select
               name="userType"
               value={user.userType}
@@ -140,7 +152,6 @@ const CreateUser = () => {
               <option value="">Select User Type</option>
               <option value="Member">Member</option>
               <option value="Trainer">Trainer</option>
-              <option value="Admin">Admin</option>
             </select>
           </div>
           <div className="w-full md:w-[calc(50%-12px)]">

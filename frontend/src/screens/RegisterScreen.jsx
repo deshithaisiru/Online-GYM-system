@@ -17,6 +17,8 @@ function SignUpPage() {
   const [weight, setWeight] = useState("");
   const [birthday, setBirthday] = useState("");
   const [age, setAge] = useState(null); // State to store calculated age
+  const [address, setAddress] = useState("");
+
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -71,6 +73,7 @@ function SignUpPage() {
         height,
         weight,
         birthday,
+        address,
       }).unwrap();
 
       dispatch(setCredentials({ ...res }));
@@ -143,6 +146,16 @@ function SignUpPage() {
                 <option value="Trainer">Trainer</option>
               </select>
             </div>
+            <div className="relative h-11 w-full min-w-[200px]">
+  <input
+    type="text"
+    placeholder="Enter address"
+    value={address}
+    onChange={(e) => setAddress(e.target.value)}
+    className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
+  />
+</div>
+
           </div>
 
           {/* Right Part */}

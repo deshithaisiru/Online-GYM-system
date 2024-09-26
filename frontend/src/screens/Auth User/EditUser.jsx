@@ -16,6 +16,7 @@ const EditUser = () => {
     height: 0,
     weight: 0,
     birthday: '',
+    address: '',
     isAdmin: false,
   });
   const [loading, setLoading] = useState(false);
@@ -160,6 +161,17 @@ const EditUser = () => {
               name="birthday"
               value={user.birthday}
               onChange={handleChange}
+              className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
+            />
+          </div>
+          <div className="w-full md:w-[calc(50%-12px)]">
+            <Input
+              type="text"
+              placeholder="Enter Address"
+              name="address"
+              value={user.address}
+              onChange={handleChange}
+              required
               className="peer h-full w-full rounded-md border border-blue-gray-200 px-3 py-3 text-sm text-blue-gray-700 transition-all focus:border-2 focus:border-gray-900"
             />
           </div>
