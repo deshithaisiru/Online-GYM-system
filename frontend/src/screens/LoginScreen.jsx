@@ -20,7 +20,7 @@ const LoginScreen = () => {
   useEffect(() => {
     if (userInfo) {
       if (userInfo.isAdmin) {
-        navigate('/admin-dashboard');
+        navigate('/dashboard');
       } else if (userInfo.userType === 'Trainer') {
         navigate('/trainer-dashboard');
       } else if (userInfo.userType === 'Member') {

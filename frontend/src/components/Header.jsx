@@ -1,7 +1,7 @@
-import { useState } from 'react'; // Import useState for managing dropdown state
+import { useState } from 'react';
 import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom'; // Removed Link for conditional navigation
+import { useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '../slices/usersApiSlice';
 import { logout } from '../slices/authSlice';
 import { toast } from 'react-toastify';
@@ -13,7 +13,6 @@ const Header = () => {
 
   const [logoutApiCall] = useLogoutMutation();
 
-  // State to control dropdown visibility
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const logoutHandler = async () => {
@@ -28,37 +27,29 @@ const Header = () => {
     }
   };
 
-  // Function to toggle dropdown
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  // Function to handle navigation based on user role
   const handleNavigation = () => {
     if (userInfo) {
-      // If user is an admin, navigate to the admin dashboard
       if (userInfo.isAdmin) {
-        navigate('/admin-dashboard');
+        navigate('/dashboard');
       } 
-      // If user is a trainer, navigate to the trainer dashboard
       else if (userInfo.userType === 'Trainer') {
         navigate('/trainer-dashboard');
       } 
-      // If user is a member, navigate to the member dashboard
       else if (userInfo.userType === 'Member') {
         navigate('/member-dashboard');
       }
     } else {
-      // If not logged in, navigate to the home page
       navigate('/');
     }
-};
-
+  };
 
   return (
     <header className="bg-yellow-500">
       <nav className="container mx-auto flex items-center justify-between py-4 px-6">
-        {/* Replaced Link with onClick for dynamic navigation */}
         <button
           onClick={handleNavigation}
           className="text-white text-xl font-semibold focus:outline-none"
@@ -68,27 +59,29 @@ const Header = () => {
         <div className="flex items-center space-x-4">
           {userInfo ? (
             <div className="flex items-center space-x-4">
-              {/* Admin Panel link only visible if user is an admin */}
               {userInfo.isAdmin && (
                 <button
-                  onClick={() => navigate('/admin-dashboard')}
+                  onClick={() => navigate('/dashboard')}
                   className="text-white text-sm font-medium"
                 >
                   Admin Panel
                 </button>
               )}
-
-              {/* User name and dropdown */}
+              {userInfo.userType === 'Member' &&  (
+                <button
+                  onClick={() => navigate('/store')}
+                  className="text-white text-sm font-medium"
+                >
+                  Store
+                </button>
+              )}
               <div className="relative">
-                {/* Button to toggle dropdown */}
                 <button
                   className="text-white font-medium focus:outline-none"
                   onClick={toggleDropdown}
                 >
                   {userInfo.name}
                 </button>
-
-                {/* Dropdown menu */}
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
                     <button

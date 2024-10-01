@@ -24,6 +24,16 @@ import CreateUser from "./screens/Auth User/CreateUser.jsx";
 import ShowUser from "./screens/Auth User/ShowUser.jsx";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen.jsx";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
+import Dashboard from "./screens/Dashboard.jsx";
+
+
+//Inventory - Deshitha
+import Store from "./screens/Inventory/main.jsx";
+import Cart from "./screens/Inventory/Cart.jsx";
+import Inventory from "./screens/Inventory/StoreM.jsx";
+import AddInventory from "./screens/Inventory/Addnewproduct.jsx";
+import UpdateItem from "./screens/Inventory/update.jsx";
+import Details from "./screens/Inventory/details.jsx";
 
 // Create the router with routes
 const router = createBrowserRouter(
@@ -43,7 +53,17 @@ const router = createBrowserRouter(
         <Route path="/trainer-dashboard" element={<TrainerDashboard />} />
         <Route path="/member-dashboard" element={<MemberDashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Route>
+
+
+      
+      <Route path="/store" element={<Store />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/inventory" element={<Inventory />} />
+      <Route path="/add-inventory" element={<AddInventory />} />
+      <Route path="/update/:Id" element={<UpdateItem />} />
+      <Route path="/details/:itemId" element={<Details />} />
     </Route>
   )
 );
