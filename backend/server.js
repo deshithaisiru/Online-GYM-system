@@ -11,6 +11,9 @@ import cors from 'cors';  // Added CORS
 //Inventory - Deshitha
 import itemsRouter from './routes/items.route.js';
 
+//Schedule - Nethula
+import Schedule from './routes/schedule.route.js';
+
 const port = process.env.PORT || 5000;
 
 // Connect to the database
@@ -37,6 +40,9 @@ app.use('/api/users', userRoutes);
 
 //Inventory - Deshitha
 app.use('/api/items', itemsRouter);
+
+//Schedule - Nethula
+app.use('/api/schedule', Schedule);
 
 // Serve static files and handle routing for production
 if (process.env.NODE_ENV === 'production') {

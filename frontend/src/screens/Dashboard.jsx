@@ -32,6 +32,7 @@ export default function Dashboard() {
     },
     {
       name: 'Schedule Management',
+      path: '/schedulemanage',
       link: 'https://www.fitness-world.in/wp-content/uploads/2022/01/5-Reasons-Why-Your-Residential-Building-Needs-a-Professional-Gym-Banner-1200x620.jpg',
     },
     {

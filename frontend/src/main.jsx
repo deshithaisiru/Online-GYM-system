@@ -26,7 +26,6 @@ import ForgotPasswordScreen from "./screens/ForgotPasswordScreen.jsx";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 import Dashboard from "./screens/Dashboard.jsx";
 
-
 //Inventory - Deshitha
 import Store from "./screens/Inventory/main.jsx";
 import Cart from "./screens/Inventory/Cart.jsx";
@@ -34,6 +33,12 @@ import Inventory from "./screens/Inventory/StoreM.jsx";
 import AddInventory from "./screens/Inventory/Addnewproduct.jsx";
 import UpdateItem from "./screens/Inventory/update.jsx";
 import Details from "./screens/Inventory/details.jsx";
+
+//Schedule - Nethula
+import Addform from "./screens/Schedules/Addform.jsx";
+import Manage from "./screens/Schedules/Mangeschedule.jsx";
+import Add from "./screens/Schedules/AddSched.jsx";
+import Myshedule from "./screens/Schedules/Myschedule.jsx";
 
 // Create the router with routes
 const router = createBrowserRouter(
@@ -57,13 +62,18 @@ const router = createBrowserRouter(
       </Route>
 
 
-      
       <Route path="/store" element={<Store />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/inventory" element={<Inventory />} />
       <Route path="/add-inventory" element={<AddInventory />} />
       <Route path="/update/:Id" element={<UpdateItem />} />
       <Route path="/details/:itemId" element={<Details />} />
+
+
+      <Route path="/addschedule" element={<Addform />} />
+      <Route path="/schedulemanage" element={<Manage />} />
+      <Route path="/Add/:Sdd" element={<Add />} />
+      <Route path="/myschedule" element={<Myshedule />} />
     </Route>
   )
 );

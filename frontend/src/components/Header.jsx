@@ -75,6 +75,14 @@ const Header = () => {
                   Store
                 </button>
               )}
+              {userInfo.userType === 'Member' &&  (
+                <button
+                  onClick={() => navigate('/myschedule')}
+                  className="text-white text-sm font-medium"
+                >
+                  My Schedule
+                </button>
+              )}
               <div className="relative">
                 <button
                   className="text-white font-medium focus:outline-none"
