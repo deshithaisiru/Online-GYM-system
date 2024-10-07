@@ -14,6 +14,13 @@ import itemsRouter from './routes/items.route.js';
 //Schedule - Nethula
 import Schedule from './routes/schedule.route.js';
 
+//Progress - Kalish
+import Progress from './routes/order.route.js';
+
+//Promo Package - Dhanga
+import PromoPackage from './routes/Promo.route.js';
+import packageRoutes from './routes/packageRoutes.js';
+
 const port = process.env.PORT || 5000;
 
 // Connect to the database
@@ -43,6 +50,13 @@ app.use('/api/items', itemsRouter);
 
 //Schedule - Nethula
 app.use('/api/schedule', Schedule);
+
+//Progress - Kalish
+app.use('/api/progress', Progress);
+
+//Promo Package - Dhanga
+app.use('/api/reco', PromoPackage);
+app.use('/api/packages', packageRoutes);
 
 // Serve static files and handle routing for production
 if (process.env.NODE_ENV === 'production') {

@@ -15,6 +15,7 @@ export default function Dashboard() {
     },
     {
       name: 'Package Management',
+      path: '/package',
       link: 'https://media.istockphoto.com/id/1432903655/photo/finance-accounting-and-fintech-a-man-on-a-computer-and-calculator-working-out-his-business.webp?b=1&s=170667a&w=0&k=20&c=9q6fEaL4xFsF9VWNcwqUrhTysrwB_cpYwC4V6opkJy8=',
     },
     {
@@ -27,7 +28,7 @@ export default function Dashboard() {
     },
     {
       name: 'Progress Tracking Management',
-      path: '/agency',
+      path: '/ProgressM',
       link: 'https://img.freepik.com/free-photo/full-shot-travel-concept-with-landmarks_23-2149153258.jpg',
     },
     {

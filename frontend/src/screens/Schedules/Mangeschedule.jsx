@@ -3,22 +3,21 @@ import { Link } from "react-router-dom";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-export default function Manageschedule() {
-  const [Info, setInfo] = useState([]);
-  const [DId, setformId] = useState("");
-  const [filter, setfilter] = useState([]);
+export default function ManageSchedule() {
+  const [info, setInfo] = useState([]);
+  const [dId, setFormId] = useState("");
+  const [filter, setFilter] = useState([]);
   const [query, setQuery] = useState("");
-  const [nameFilter, setNameFilter] = useState(""); // New state for name filter
-  const [uniqueNames, setUniqueNames] = useState([]); // New state for unique names
+  const [nameFilter, setNameFilter] = useState("");
+  const [uniqueNames, setUniqueNames] = useState([]);
 
   useEffect(() => {
-    const fetchinfo = async () => {
+    const fetchInfo = async () => {
       try {
         const res = await fetch(`/api/schedule/Sgetall`);
         const data = await res.json();
         if (res.ok) {
           setInfo(data.equipment);
-          // Get unique names for dropdown
           const names = [...new Set(data.equipment.map((item) => item.name))];
           setUniqueNames(names);
         }
@@ -26,18 +25,18 @@ export default function Manageschedule() {
         console.log(error.message);
       }
     };
-    fetchinfo();
+    fetchInfo();
   }, []);
 
   const handleDeleteUser = async () => {
     try {
-      const res = await fetch(`/api/schedule/sdelete/${DId}`, {
+      const res = await fetch(`/api/schedule/sdelete/${dId}`, {
         method: "DELETE",
       });
       const data = await res.json();
       if (res.ok) {
-        setInfo((prev) => prev.filter((Employe) => Employe._id !== DId));
-        alert("deleted");
+        setInfo((prev) => prev.filter((employee) => employee._id !== dId));
+        alert("Deleted successfully");
       } else {
         console.log(data.message);
       }
@@ -46,30 +45,27 @@ export default function Manageschedule() {
     }
   };
 
-  // Search & Filter
   useEffect(() => {
-    let filteredData = [...Info];
+    let filteredData = [...info];
     
     if (query.trim() !== "") {
       filteredData = filteredData.filter(
-        (Employe) =>
-          Employe.name &&
-          Employe.name.toLowerCase().includes(query.toLowerCase())
+        (employee) =>
+          employee.name &&
+          employee.name.toLowerCase().includes(query.toLowerCase())
       );
     }
 
     if (nameFilter) {
-      filteredData = filteredData.filter((Employe) => Employe.name === nameFilter);
+      filteredData = filteredData.filter((employee) => employee.name === nameFilter);
     }
 
-    setfilter(filteredData);
-  }, [query, nameFilter, Info]);
+    setFilter(filteredData);
+  }, [query, nameFilter, info]);
 
   const generatePDF = () => {
     const doc = new jsPDF();
     const tableColumn = ["Name", "Package", "Time", "Schedule"];
-
-    // Prepare the data
     const tableRows = filter.map((item) => [
       item.name,
       item.type,
@@ -77,7 +73,6 @@ export default function Manageschedule() {
       item.schedule,
     ]);
 
-    // Generate the table
     doc.autoTable({
       head: [tableColumn],
       body: tableRows,
@@ -85,40 +80,39 @@ export default function Manageschedule() {
       theme: "grid",
     });
 
-    // Save the PDF
     doc.save("schedule_records.pdf");
   };
 
   return (
-    <div className="h-[800px] relative bg-white">
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
-        <div className="flex justify-center items-center">
-          <div className="mb-8 mt-4 font-semibold uppercase text-yellow-500 text-2xl">
-            Manage Schedule
-          </div>
-        </div>
-        <div className="flex justify-center items-center">
-          <Link to={`/dashboard`}>
-            <button className="text-md hover:text-yellow-400 font-serif underline text-yellow-500">
-              Back
+    <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-white">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold text-yellow-600 text-center mb-8">
+          Manage Schedule
+        </h1>
+        
+        <div className="flex justify-between items-center mb-8">
+          <Link to="/dashboard">
+            <button className="bg-white text-yellow-500 border border-yellow-500 px-4 py-2 rounded-full hover:bg-yellow-500 hover:text-white transition duration-300">
+              Back to Dashboard
             </button>
           </Link>
+          <button
+            onClick={generatePDF}
+            className="bg-yellow-500 text-white px-6 py-2 rounded-full hover:bg-yellow-600 transition duration-300"
+          >
+            Generate PDF
+          </button>
         </div>
 
-        {/* Search Input */}
-        <div className="flex justify-center mb-8 items-center">
+        <div className="flex flex-col md:flex-row gap-4 mb-8">
           <input
             type="text"
             placeholder="Search by name..."
-            className="w-[400px] h-10 mt-4 rounded-full shadow-xl border border-yellow-400 bg-opacity-10"
+            className="flex-grow px-4 py-2 rounded-full border border-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             onChange={(e) => setQuery(e.target.value)}
           />
-        </div>
-
-        {/* Dropdown Filter for Names */}
-        <div className="flex justify-center mb-8 items-center">
           <select
-            className="w-[200px] h-10 mt-4 rounded-full shadow-xl border border-yellow-400 bg-opacity-10"
+            className="px-4 py-2 rounded-full border border-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             value={nameFilter}
             onChange={(e) => setNameFilter(e.target.value)}
           >
@@ -131,55 +125,38 @@ export default function Manageschedule() {
           </select>
         </div>
 
-        {/* Display Filtered Schedules */}
-        <div className="lg:w-[600px] xl:w-[1000px] lg:h-[500px] w-[450px] md:w-[700px] bg-white p-4 rounded-lg shadow-lg border border-yellow-500">
-          <div className="max-h-[470px] overflow-y-auto scrollbar-none">
+        <div className="bg-white rounded-lg shadow-xl p-6 overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filter.length > 0 ? (
-              filter.map((Employe) => (
+              filter.map((employee) => (
                 <div
-                  key={Employe._id}
-                  className="bg-yellow-100 p-4 mb-4 rounded-lg shadow-md bg-opacity-80 transition-transform duration-300 hover:scale-90"
+                  key={employee._id}
+                  className="bg-yellow-50 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300"
                 >
-                  <div className="flex">
-                    <img
-                      src={Employe.image}
-                      alt=""
-                      className="w-[400px] h-[300px] mr-4"
-                    />
-                    <div className="flex flex-wrap justify-between w-full">
-                      <div className="w-1/2 pr-2">
-                        <div>
-                          <strong>Name:</strong> {Employe.name}
-                        </div>
-                        <div>
-                          <strong>Type:</strong> {Employe.type}
-                        </div>
-                        <div className="font-thin text-yellow-600">
-                          <strong>Schedule:</strong> {Employe.schedule}
-                        </div>
-                      </div>
-                      <div className="w-1/2 pl-2">
-                        <div>
-                          <strong>Time:</strong> {Employe.time}
-                        </div>
-                        <div>
-                          <strong>Info:</strong> {Employe.info}
-                        </div>
-                      </div>
-                    </div>
+                  <img
+                    src={employee.image}
+                    alt={employee.name}
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="p-4">
+                    <h3 className="text-xl font-semibold text-yellow-700 mb-2">{employee.name}</h3>
+                    <p className="text-gray-600"><span className="font-medium">Type:</span> {employee.type}</p>
+                    <p className="text-gray-600"><span className="font-medium">Time:</span> {employee.time}</p>
+                    <p className="text-gray-600"><span className="font-medium">Schedule:</span> {employee.schedule}</p>
+                    <p className="text-gray-500 mt-2 text-sm">{employee.info}</p>
                   </div>
-                  <div className="mt-2 flex justify-between">
-                    <Link to={`/Add/${Employe._id}`}>
-                      <button className="bg-yellow-500 hover:opacity-80 rounded-lg h-8 w-36 text-white">
+                  <div className="bg-yellow-100 px-4 py-3 flex justify-between items-center">
+                    <Link to={`/Add/${employee._id}`}>
+                      <button className="bg-yellow-500 text-white px-4 py-2 rounded-full hover:bg-yellow-600 transition duration-300">
                         Add Schedule
                       </button>
                     </Link>
                     <button
                       onClick={() => {
-                        setformId(Employe._id);
+                        setFormId(employee._id);
                         handleDeleteUser();
                       }}
-                      className="bg-red-500 hover:opacity-80 rounded-lg h-8 w-24 text-white"
+                      className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition duration-300"
                     >
                       Delete
                     </button>
@@ -187,20 +164,11 @@ export default function Manageschedule() {
                 </div>
               ))
             ) : (
-              <p className="text-2xl font-serif text-yellow-500 opacity-60 mt-14 text-center">
+              <p className="col-span-full text-2xl text-yellow-500 text-center py-12">
                 No schedules found
               </p>
             )}
           </div>
-        </div>
-
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={generatePDF}
-            className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
-          >
-            Generate PDF
-          </button>
         </div>
       </div>
     </div>

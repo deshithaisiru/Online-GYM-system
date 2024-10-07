@@ -40,6 +40,20 @@ import Manage from "./screens/Schedules/Mangeschedule.jsx";
 import Add from "./screens/Schedules/AddSched.jsx";
 import Myshedule from "./screens/Schedules/Myschedule.jsx";
 
+//Progress - Kalish
+import Update from "./screens/Progress/Update.jsx";
+import MangeEmp from "./screens/Progress/NewAdd.jsx";
+import ProgressM from "./screens/Progress/ProgressM.jsx";
+import Progressdisplay from "./screens/Progress/Progressdisplay.jsx";
+
+//Package - Dhanga
+import UpdatePack from "./screens/Packages/Update.jsx";
+import Member from "./screens/Packages/Member.jsx";
+import Pack from "./screens/Packages/PackM.jsx";
+import Addpromo from "./screens/Packages/Addpromo.jsx";
+import Plan from "./screens/Packages/palan.jsx";
+import JoinNowPage from "./screens/Packages/JoinNowPage.jsx";
+
 // Create the router with routes
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -61,7 +75,6 @@ const router = createBrowserRouter(
         <Route path="/dashboard" element={<Dashboard />} />
       </Route>
 
-
       <Route path="/store" element={<Store />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/inventory" element={<Inventory />} />
@@ -74,6 +87,20 @@ const router = createBrowserRouter(
       <Route path="/schedulemanage" element={<Manage />} />
       <Route path="/Add/:Sdd" element={<Add />} />
       <Route path="/myschedule" element={<Myshedule />} />
+
+
+      <Route path="/addprogress" element={<MangeEmp />} />
+      <Route path="/ProgressM" element={<ProgressM />} />
+      <Route path="/manage/:idd" element={<Update />} />
+      <Route path="/pdisplay" element={<Progressdisplay />} />
+
+
+      <Route path="/madd" element={<Member />} />
+      <Route path="/Addprom" element={<Addpromo />} />
+      <Route path="/plan" element={<Plan />} />
+      <Route path="/package" element={<Pack />} />
+      <Route path="/manage/:idd" element={<UpdatePack />} />
+      <Route path="/join-now" element={<JoinNowPage />} />
     </Route>
   )
 );

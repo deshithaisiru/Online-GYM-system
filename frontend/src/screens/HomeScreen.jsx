@@ -3,6 +3,7 @@ import { DefaultImg } from "../components/DefaultImage";
 import { CardDefault } from "../components/CardDefault";
 import { DefaultGallery } from "../components/Gallery.jsx";
 
+
 const HomeScreen = () => {
   return (
     <>
