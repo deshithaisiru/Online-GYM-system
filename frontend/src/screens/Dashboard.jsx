@@ -20,10 +20,12 @@ export default function Dashboard() {
     },
     {
       name: 'Employee Management',
-      link: 'https://media.istockphoto.com/id/1390233984/photo/modern-luxury-bedroom.jpg?s=612x612&w=0&k=20&c=po91poqYoQTbHUpO1LD1HcxCFZVpRG-loAMWZT7YRe4=',
+      path: '/employeefun',
+      link: 'https://images.pexels.com/photos/1181304/pexels-photo-1181304.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     },
     {
       name: 'Supplier Management',
+      path: '/supplierM',
       link: 'https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?cs=srgb&dl=pexels-wendy-wei-1190298.jpg&fm=jpg',
     },
     {
@@ -38,6 +40,7 @@ export default function Dashboard() {
     },
     {
       name: 'Customer Affairness Management',
+      path: '/adminfeedback',
       link: 'https://images.healthshots.com/healthshots/en/uploads/2023/07/20143449/hiking.jpg',
     },
   ];

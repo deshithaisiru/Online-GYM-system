@@ -69,6 +69,14 @@ const Header = () => {
               )}
               {userInfo.userType === 'Member' &&  (
                 <button
+                  onClick={() => navigate('/feedback')}
+                  className="text-white text-sm font-medium"
+                >
+                  Feedback
+                </button>
+              )}
+              {userInfo.userType === 'Member' &&  (
+                <button
                   onClick={() => navigate('/store')}
                   className="text-white text-sm font-medium"
                 >
