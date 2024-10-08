@@ -1,5 +1,5 @@
 
-import Order from "../../models/Supplier/Order.model.js";
+import Order from "../../models/Supplier/supplier.model.js";
 
 
 

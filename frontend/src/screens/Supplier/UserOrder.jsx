@@ -9,7 +9,7 @@ export default function ManageEmp() {
   useEffect(() => {
     const fetchinfo = async () => {
       try {
-        const res = await fetch(`/api/reco/getall`);
+        const res = await fetch(`/api/sup/getallorder`);
         const data = await res.json();
 
         if (res.ok) {

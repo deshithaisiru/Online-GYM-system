@@ -67,19 +67,27 @@ const Main = () => {
         {filter && filter.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filter.map((item) => (
-              <div key={item._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <Link to={`/details/${item._id}`}>
-                  <img src={item.image} alt={item.ItemsN} className="w-full h-48 object-cover" />
+              <div key={item._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col">
+                <Link to={`/details/${item._id}`} className="flex-shrink-0">
+                  <div className="aspect-w-1 aspect-h-1 w-full">
+                    <img 
+                      src={item.image} 
+                      alt={item.ItemsN} 
+                      className="w-full h-full object-cover object-center"
+                    />
+                  </div>
                 </Link>
-                <div className="p-4">
+                <div className="p-4 flex flex-col flex-grow">
                   <h2 className="text-lg font-semibold text-gray-800 mb-2 truncate">{item.ItemsN}</h2>
                   <p className="text-yellow-600 font-bold mb-2">Rs.{item.price}</p>
                   <p className="text-sm text-gray-600 mb-4 truncate">{item.descrip}</p>
-                  <Link to={`/details/${item._id}`}>
-                    <button className="w-full bg-yellow-500 text-white py-2 px-4 rounded-full hover:bg-yellow-600 transition-colors duration-200 uppercase text-sm font-serif">
-                      Select Option
-                    </button>
-                  </Link>
+                  <div className="mt-auto">
+                    <Link to={`/details/${item._id}`} className="block">
+                      <button className="w-full bg-yellow-500 text-white py-2 px-4 rounded-full hover:bg-yellow-600 transition-colors duration-200 uppercase text-sm font-serif">
+                        Select Option
+                      </button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}

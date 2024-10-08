@@ -147,19 +147,17 @@ export default function UpdateProduct() {
             </div>
             <div>
               <label htmlFor="quantity" className="sr-only">Quantity</label>
-              <select
+              <input
                 id="quantity"
                 name="quantity"
+                type="number"
+                min="1"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 focus:z-10 sm:text-sm"
+                placeholder="Quantity"
                 value={formData.quantity || ""}
                 onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-              >
-                <option value="">Select Quantity</option>
-                {[1, 2, 3, 4, 5, 6].map((num) => (
-                  <option key={num} value={num}>{num}</option>
-                ))}
-              </select>
+              />
             </div>
             <div>
               <label htmlFor="size" className="sr-only">Size</label>

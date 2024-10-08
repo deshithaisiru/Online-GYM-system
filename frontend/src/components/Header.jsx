@@ -61,6 +61,14 @@ const Header = () => {
             <div className="flex items-center space-x-4">
               {userInfo.isAdmin && (
                 <button
+                  onClick={() => navigate('/UserOrder')}
+                  className="text-white text-sm font-medium"
+                >
+                  Supplier Order
+                </button>
+              )}
+              {userInfo.isAdmin && (
+                <button
                   onClick={() => navigate('/dashboard')}
                   className="text-white text-sm font-medium"
                 >

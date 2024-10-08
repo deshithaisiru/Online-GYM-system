@@ -143,7 +143,7 @@ export default function ManageEmp() {
                       <td className="px-4 py-3 whitespace-nowrap">{`${Employe.sleepTime} h`}</td>
                       <td className="px-4 py-3 whitespace-nowrap">{Employe.RestDay}</td>
                       <td className="whitespace-nowrap">
-                        <Link to={`/manage/${Employe._id}`}>
+                        <Link to={`/managepro/${Employe._id}`}>
                           <button className="w-24 bg-green-500 hover:bg-green-400 rounded-lg h-10 border border-opacity-45 text-white">
                             Edit
                           </button>

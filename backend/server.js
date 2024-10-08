@@ -34,7 +34,7 @@ import otRoute from './routes/Employee/overtimeRoutes.js';
 import leaveRoute from './routes/Employee/leaveRoutes.js';
 
 //Supplier - Sajana
-import Supplier from './routes/order.route.js';
+import Supplier from './routes/Supplier/supplier.route.js';
 
 
 

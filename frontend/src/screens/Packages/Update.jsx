@@ -55,7 +55,7 @@ export default function Update() {
       if (res.ok) {
         setPublishError(null);
         alert("Success");
-        navigate("/");
+        navigate("/package");
       }
     } catch (error) {
       setPublishError("Something went wrong");
@@ -80,7 +80,7 @@ export default function Update() {
             </div>
           </div>
           <div className="flex justify-center items-center">
-            <Link to={`/`}>
+            <Link to={`/package`}>
               <button className="text-md hover:text-orange-400 font-serif underline text-gray-800">
                 Back
               </button>

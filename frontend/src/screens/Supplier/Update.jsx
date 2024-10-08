@@ -22,7 +22,7 @@ export default function Update() {
     try {
       const fetchE = async () => {
         const res = await fetch(
-          `/api/reco/getall?upId=${idd}`
+          `/api/sup/getallorder?upId=${idd}`
         );
         const data = await res.json();
         console.log("data", data);
@@ -54,7 +54,7 @@ export default function Update() {
     e.preventDefault();
     try {
         
-      const res = await fetch(`/api/reco/updatee/${formData._id}`, {
+      const res = await fetch(`/api/sup/updateeorder/${formData._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export default function Update() {
         setPublishError(null);
         
         alert("sucsses ")
-        navigate("/");
+        navigate("/supplierM");
         
       }
     } catch (error) {
@@ -183,9 +183,9 @@ export default function Update() {
                         value={formData.size}
                       >
                         <option value="">Select </option>
-                        <option value="Large">Large</option>
-                        <option value="Small">Small</option>
-                        <option value="Medium">Medium</option>
+                        <option value="2lbs">2lbs</option>
+                        <option value="4lbs">4lbs</option>
+                        <option value="6lbs">6lbs</option>
                       
                       </select>
                     </div>

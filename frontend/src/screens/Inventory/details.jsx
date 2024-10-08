@@ -28,7 +28,7 @@ export default function Details() {
   }, [itemId]);
 
   const increment = () => {
-    if (quantity < 3) setQuantity(quantity + 1);
+    if (quantity < 20) setQuantity(quantity + 1);
   };
 
   const decrement = () => {

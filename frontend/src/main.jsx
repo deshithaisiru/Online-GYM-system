@@ -126,7 +126,7 @@ const router = createBrowserRouter(
       {/* Progress - Kalish */}
       <Route path="/addprogress" element={<MangeEmp />} />
       <Route path="/ProgressM" element={<ProgressM />} />
-      <Route path="/manage/:idd" element={<Update />} />
+      <Route path="/managepro/:idd" element={<Update />} />
       <Route path="/pdisplay" element={<Progressdisplay />} />
 
       {/* Package - Dhanga */}
@@ -169,7 +169,7 @@ const router = createBrowserRouter(
       <Route path="/add" element={<MangeSupOrder />} />
       <Route path="/supplierM" element={<Order />} />
       <Route path="/UserOrder" element={<UserOrder />} />
-      <Route path="/manage/:idd" element={<UpdateSupOrder />} />
+      <Route path="/manageorder/:idd" element={<UpdateSupOrder />} />
     </Route>
   )
 );
